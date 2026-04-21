@@ -1,0 +1,18 @@
+<div class="rounded-md bg-green-50 p-4 mt-4">
+    <div class="flex">
+        <div class="ml-3">
+            <h3 class="text-sm font-medium text-green-800">Batch "{{ batch.name }}" created successfully!</h3>
+            <div class="mt-2 text-sm text-green-700">
+                <p>You can now download the printable PDF for this batch.</p>
+            </div>
+            <div class="mt-4">
+                <div class="-mx-2 -my-1.5 flex">
+                    <!-- Link to PDF generation endpoint (to be implemented in Milestone 4) -->
+                    <a href="/print-studio/batch/{{ batch.id }}/pdf" target="_blank" class="rounded-md bg-green-50 px-2 py-1.5 text-sm font-medium text-green-800 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-green-50">
+                        Download PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
