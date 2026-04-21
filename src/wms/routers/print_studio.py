@@ -1,4 +1,3 @@
-# ruff: noqa
 """Print Studio router."""
 
 from typing import Annotated, List
@@ -54,7 +53,9 @@ async def create_batch(
     if not prompt_ids:
         # User didn't select any
         return HTMLResponse(
-            '<div class="rounded-md bg-red-50 p-4 mt-4"><div class="flex"><div class="ml-3"><h3 class="text-sm font-medium text-red-800">Error: No prompts selected</h3></div></div></div>'
+            '<div class="rounded-md bg-red-50 p-4 mt-4"><div class="flex">'
+            '<div class="ml-3"><h3 class="text-sm font-medium text-red-800">'
+            "Error: No prompts selected</h3></div></div></div>"
         )
 
     # 1. Create the Batch record
@@ -69,7 +70,8 @@ async def create_batch(
 
     await db.commit()
 
-    # Provide a link to download the PDF for this batch, or simply reload with success message
+    # Provide a link to download the PDF for this batch,
+    # or simply reload with success message
     from wms.config import settings
 
     return templates.TemplateResponse(
@@ -120,6 +122,3 @@ async def generate_pdf(
         media_type="application/pdf",
         headers={"Content-Disposition": f'attachment; filename="batch_{batch_id}.pdf"'},
     )
-
-
-# noqa: E501

@@ -1,4 +1,3 @@
-# ruff: noqa
 import logging
 
 from sqlalchemy import select
@@ -35,12 +34,10 @@ SAMPLE_PROMPTS = [
 
 
 async def seed_data(session: AsyncSession) -> None:
+    """Seed the database with sample prompts if it's empty."""
     result = await session.execute(select(Prompt).limit(1))
     if result.scalar_one_or_none() is not None:
         return
     for data in SAMPLE_PROMPTS:
         session.add(Prompt(**data))
     await session.commit()
-
-
-# noqa

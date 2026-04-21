@@ -1,11 +1,12 @@
-# ruff: noqa
 """Integration tests for required features."""
+
+import re
 
 import httpx
 import pytest
 from httpx import AsyncClient
+
 from wms.main import app
-import re
 
 
 @pytest.mark.asyncio
@@ -51,7 +52,10 @@ async def test_crud_idea_dashboard():
 
 @pytest.mark.asyncio
 async def test_pdf_generation_layout():
-    """Test PDF Generation Logic and ensure a PDF is returned with crop marks instructions via the HTML layout."""
+    """Test PDF Generation Logic.
+
+    Ensures a PDF is returned with crop marks instructions via the HTML layout.
+    """
     async with AsyncClient(
         transport=httpx.ASGITransport(app=app), base_url="http://test"
     ) as client:

@@ -9,6 +9,7 @@ def test_generate_uuid():
     assert isinstance(val1, str)
     assert len(val1) == 36
 
+
 def test_prompt_model():
     """Test the Prompt model initialization."""
     prompt = Prompt(text="Test", category="TestCat", difficulty=1)
@@ -16,8 +17,8 @@ def test_prompt_model():
     assert prompt.category == "TestCat"
     assert prompt.difficulty == 1
 
+
 def test_batch_model():
     """Test the Batch model initialization."""
     batch = Batch(name="Test Batch")
     assert batch.name == "Test Batch"
-# noqa
