@@ -1,4 +1,5 @@
 from typing import AsyncGenerator
+from unittest.mock import patch
 
 import pytest_asyncio
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
@@ -37,7 +38,8 @@ async def setup_test_db():
     async with test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
-    yield
+    with patch("wms.main.AsyncSessionLocal", new=AsyncTestSessionLocal):
+        yield
 
     # Drop tables after test
     async with test_engine.begin() as conn:
