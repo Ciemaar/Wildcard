@@ -3,7 +3,7 @@ import logging
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from wms.database.models import Prompt
+from wms.database.models import Mission
 
 logger = logging.getLogger(__name__)
 
@@ -34,10 +34,10 @@ SAMPLE_PROMPTS = [
 
 
 async def seed_data(session: AsyncSession) -> None:
-    """Seed the database with sample prompts if it's empty."""
-    result = await session.execute(select(Prompt).limit(1))
+    """Seed the database with sample missions if it's empty."""
+    result = await session.execute(select(Mission).limit(1))
     if result.scalar_one_or_none() is not None:
         return
     for data in SAMPLE_PROMPTS:
-        session.add(Prompt(**data))
+        session.add(Mission(**data))
     await session.commit()

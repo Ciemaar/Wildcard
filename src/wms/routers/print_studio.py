@@ -8,7 +8,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from wms.database.models import Batch, BatchPrompt, Prompt
+from wms.database.models import Batch, BatchMission, Mission
 from wms.database.session import get_db
 
 router = APIRouter(tags=["print-studio"])
@@ -20,15 +20,15 @@ async def print_studio(
     request: Request,
     db: AsyncSession = Depends(get_db),
 ) -> HTMLResponse:
-    """Render the print studio with all APPROVED prompts."""
-    # Only fetch approved prompts for printing
+    """Render the print studio with all APPROVED missions."""
+    # Only fetch approved missions for printing
     query = (
-        select(Prompt)
-        .where(Prompt.status == "APPROVED")
-        .order_by(Prompt.created_at.desc())
+        select(Mission)
+        .where(Mission.status == "APPROVED")
+        .order_by(Mission.created_at.desc())
     )
     result = await db.execute(query)
-    prompts = result.scalars().all()
+    missions = result.scalars().all()
 
     from wms.config import settings
 
@@ -36,7 +36,7 @@ async def print_studio(
         request=request,
         name="print_studio.html",
         context={
-            "prompts": prompts,
+            "missions": missions,
             "settings": settings,
         },
     )
@@ -46,16 +46,16 @@ async def print_studio(
 async def create_batch(
     request: Request,
     batch_name: Annotated[str, Form()],
-    prompt_ids: Annotated[List[str], Form()] = [],
+    mission_ids: Annotated[List[str], Form()] = [],
     db: AsyncSession = Depends(get_db),
 ) -> HTMLResponse:
-    """Create a new batch from selected prompts."""
-    if not prompt_ids:
+    """Create a new batch from selected missions."""
+    if not mission_ids:
         # User didn't select any
         return HTMLResponse(
             '<div class="rounded-md bg-red-50 p-4 mt-4"><div class="flex">'
             '<div class="ml-3"><h3 class="text-sm font-medium text-red-800">'
-            "Error: No prompts selected</h3></div></div></div>"
+            "Error: No missions selected</h3></div></div></div>"
         )
 
     # 1. Create the Batch record
@@ -63,9 +63,9 @@ async def create_batch(
     db.add(new_batch)
     await db.flush()  # To get the batch.id generated
 
-    # 2. Create the BatchPrompt join records
-    for pid in prompt_ids:
-        bp = BatchPrompt(batch_id=new_batch.id, prompt_id=pid)
+    # 2. Create the BatchMission join records
+    for pid in mission_ids:
+        bp = BatchMission(batch_id=new_batch.id, mission_id=pid)
         db.add(bp)
 
     await db.commit()
@@ -92,9 +92,9 @@ async def generate_pdf(
 
     from wms.config import settings
 
-    # Fetch batch and its prompts
+    # Fetch batch and its missions
     query = (
-        select(Batch).where(Batch.id == batch_id).options(selectinload(Batch.prompts))
+        select(Batch).where(Batch.id == batch_id).options(selectinload(Batch.missions))
     )
     result = await db.execute(query)
     batch = result.scalar_one_or_none()
@@ -109,7 +109,7 @@ async def generate_pdf(
         ),  # Mock request object for template rendering
         name="pdf_layout.html",
         context={
-            "cards": batch.prompts,
+            "cards": batch.missions,
             "settings": settings,
         },
     ).body.decode("utf-8")

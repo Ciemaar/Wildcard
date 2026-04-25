@@ -1,4 +1,4 @@
-from wms.database.models import Batch, Prompt, generate_uuid
+from wms.database.models import Batch, Mission, generate_uuid
 
 
 def test_generate_uuid():
@@ -11,11 +11,11 @@ def test_generate_uuid():
 
 
 def test_prompt_model():
-    """Test the Prompt model initialization."""
-    prompt = Prompt(text="Test", category="TestCat", difficulty=1)
-    assert prompt.text == "Test"
-    assert prompt.category == "TestCat"
-    assert prompt.difficulty == 1
+    """Test the Mission model initialization."""
+    mission = Mission(text="Test", category="TestCat", difficulty=1)
+    assert mission.text == "Test"
+    assert mission.category == "TestCat"
+    assert mission.difficulty == 1
 
 
 def test_batch_model():

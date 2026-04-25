@@ -17,18 +17,18 @@ def generate_uuid() -> str:
     return str(uuid.uuid4())
 
 
-class BatchPrompt(Base):
-    """Association table model between Batch and Prompt."""
+class BatchMission(Base):
+    """Association table model between Batch and Mission."""
 
-    __tablename__ = "BatchPrompt"
+    __tablename__ = "BatchMission"
     batch_id: Mapped[str] = mapped_column(ForeignKey("Batch.id"), primary_key=True)
-    prompt_id: Mapped[str] = mapped_column(ForeignKey("Prompt.id"), primary_key=True)
+    mission_id: Mapped[str] = mapped_column(ForeignKey("Mission.id"), primary_key=True)
 
 
-class Prompt(Base):
-    """Model representing a photography game prompt."""
+class Mission(Base):
+    """Model representing a photography game mission."""
 
-    __tablename__ = "Prompt"
+    __tablename__ = "Mission"
     id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_uuid)
     text: Mapped[str] = mapped_column(String, nullable=False)
     category: Mapped[str] = mapped_column(String, nullable=False)
@@ -41,12 +41,12 @@ class Prompt(Base):
         DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now
     )
     batches: Mapped[List["Batch"]] = relationship(
-        secondary="BatchPrompt", back_populates="prompts"
+        secondary="BatchMission", back_populates="missions"
     )
 
 
 class Batch(Base):
-    """Model representing a batch of prompts generated for printing."""
+    """Model representing a batch of missions generated for printing."""
 
     __tablename__ = "Batch"
     id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_uuid)
@@ -54,6 +54,6 @@ class Batch(Base):
     printed_at: Mapped[datetime.datetime] = mapped_column(
         DateTime, default=datetime.datetime.now
     )
-    prompts: Mapped[List["Prompt"]] = relationship(
-        secondary="BatchPrompt", back_populates="batches"
+    missions: Mapped[List["Mission"]] = relationship(
+        secondary="BatchMission", back_populates="batches"
     )
