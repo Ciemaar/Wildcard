@@ -10,7 +10,7 @@ def test_generate_uuid():
     assert len(val1) == 36
 
 
-def test_prompt_model():
+def test_mission_model():
     """Test the Mission model initialization."""
     mission = Mission(text="Test", category="TestCat", difficulty=1)
     assert mission.text == "Test"
