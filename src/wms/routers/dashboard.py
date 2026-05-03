@@ -59,7 +59,7 @@ async def dashboard(
 
 
 @router.post("/mission", response_class=HTMLResponse)
-async def add_prompt(
+async def add_mission(
     request: Request,
     text: Annotated[str, Form()],
     category: Annotated[str, Form()],
@@ -67,8 +67,8 @@ async def add_prompt(
     db: AsyncSession = Depends(get_db),
 ) -> HTMLResponse:
     """Add a new mission and return the updated table."""
-    new_prompt = Mission(text=text, category=category, difficulty=difficulty)
-    db.add(new_prompt)
+    new_mission = Mission(text=text, category=category, difficulty=difficulty)
+    db.add(new_mission)
     await db.commit()
 
     result = await db.execute(select(Mission).order_by(Mission.created_at.desc()))
@@ -100,7 +100,7 @@ async def update_status(
 
 
 @router.delete("/mission/{mission_id}", response_class=HTMLResponse)
-async def delete_prompt(
+async def delete_mission(
     mission_id: str,
     db: AsyncSession = Depends(get_db),
 ) -> HTMLResponse:

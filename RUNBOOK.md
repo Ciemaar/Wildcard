@@ -19,7 +19,7 @@ Before running the application, ensure the database is fully initialized to the 
 ```bash
 PYTHONPATH=src uv run alembic upgrade head
 ```
-*(Note: On application startup, the `seed_data` script will automatically inject 10 sample prompts if the database is empty.)*
+*(Note: On application startup, the `seed_data` script will automatically inject 10 sample missions if the database is empty.)*
 
 ## 4. Frontend Assets (Tailwind CSS)
 The application uses Tailwind CSS. To build the required CSS file for development or production:
