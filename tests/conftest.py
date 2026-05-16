@@ -28,6 +28,7 @@ async def override_get_db() -> AsyncGenerator[AsyncSession, None]:
         yield session
 
 
+# Override production get_db dependency with in-memory test session
 app.dependency_overrides[get_db] = override_get_db
 
 
