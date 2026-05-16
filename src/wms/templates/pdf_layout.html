@@ -58,12 +58,12 @@
             font-weight: bold;
         }
 
-        .prompt-text {
+        .mission-text {
             font-size: 14pt;
             font-weight: bold;
             color: #111;
             text-align: center;
-            /* If prompt is long, it might wrap. This prevents it from overflowing */
+            /* If mission is long, it might wrap. This prevents it from overflowing */
             max-height: 1.2in;
             overflow: hidden;
             display: flex;
@@ -80,7 +80,7 @@
             color: #666;
         }
 
-        .prompt-id {
+        .mission-id {
             font-family: monospace;
         }
     </style>
@@ -91,9 +91,9 @@
         {% for card in page_cards %}
         <div class="card-container">
             <div class="brand-header">{{ settings.brand_name }}</div>
-            <div class="prompt-text">{{ card.text }}</div>
+            <div class="mission-text">{{ card.text }}</div>
             <div class="card-footer">
-                <div class="prompt-id">#{{ card.id[-4:] }}</div>
+                <div class="mission-id">#{{ card.id[-4:] }}</div>
                 <div>{{ settings.hashtag }}</div>
             </div>
         </div>

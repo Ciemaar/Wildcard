@@ -50,3 +50,8 @@ For production build (minified):
 ## Contributing
 - All environment variables should be defined in `src/wms/config.py` using `pydantic-settings`.
 - When proposing new tools, evaluate them in `docs/tooling_evaluation.md` first.
+
+## API Router Architecture
+The application is structured into domain-specific Fast API routers mounted in `src/wms/main.py`.
+- **`dashboard.py`**: Manages all CRUD operations for the `Mission` models and renders the `dashboard.html` view.
+- **`print_studio.py`**: Handles batch generation logic, joining approved missions together, and serving the WeasyPrint PDF generation logic from `pdf_layout.html`.

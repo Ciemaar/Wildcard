@@ -1,4 +1,3 @@
-# ruff: noqa
 import logging
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
@@ -18,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    """Handle application startup and shutdown events."""
     async with AsyncSessionLocal() as session:
         await seed_data(session)
     yield
@@ -34,9 +34,7 @@ app.include_router(print_studio.router, prefix="/print-studio")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request) -> HTMLResponse:
+    """Render the landing base layout view."""
     return templates.TemplateResponse(
         request=request, name="base.html", context={"settings": settings}
     )
-
-
-# noqa

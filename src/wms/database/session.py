@@ -1,4 +1,3 @@
-# ruff: noqa
 import logging
 from typing import AsyncGenerator
 
@@ -16,8 +15,6 @@ AsyncSessionLocal = async_sessionmaker(
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    """Dependency to provide an async database session per request."""
     async with AsyncSessionLocal() as session:
         yield session
-
-
-# noqa

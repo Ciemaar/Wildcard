@@ -8,7 +8,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from wms.database.models import Prompt
+from wms.database.models import Mission
 from wms.database.session import get_db
 
 router = APIRouter(tags=["dashboard"])
@@ -22,25 +22,25 @@ async def dashboard(
     status: str | None = None,
     category: str | None = None,
 ) -> HTMLResponse:
-    """Render the dashboard with a list of prompts."""
-    query = select(Prompt).order_by(Prompt.created_at.desc())
+    """Render the dashboard with a list of missions."""
+    query = select(Mission).order_by(Mission.created_at.desc())
 
     if status:
-        query = query.where(Prompt.status == status)
+        query = query.where(Mission.status == status)
     if category:
-        query = query.where(Prompt.category == category)
+        query = query.where(Mission.category == category)
 
     result = await db.execute(query)
-    prompts = result.scalars().all()
+    missions = result.scalars().all()
 
-    cat_result = await db.execute(select(Prompt.category).distinct())
+    cat_result = await db.execute(select(Mission.category).distinct())
     categories = cat_result.scalars().all()
 
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
             request=request,
-            name="partials/prompt_table.html",
-            context={"prompts": prompts},
+            name="partials/mission_table.html",
+            context={"missions": missions},
         )
 
     from wms.config import settings
@@ -49,7 +49,7 @@ async def dashboard(
         request=request,
         name="dashboard.html",
         context={
-            "prompts": prompts,
+            "missions": missions,
             "categories": categories,
             "current_status": status,
             "current_category": category,
@@ -58,54 +58,56 @@ async def dashboard(
     )
 
 
-@router.post("/prompt", response_class=HTMLResponse)
-async def add_prompt(
+@router.post("/mission", response_class=HTMLResponse)
+async def add_mission(
     request: Request,
     text: Annotated[str, Form()],
     category: Annotated[str, Form()],
     difficulty: Annotated[int, Form()],
     db: AsyncSession = Depends(get_db),
 ) -> HTMLResponse:
-    """Add a new prompt and return the updated table."""
-    new_prompt = Prompt(text=text, category=category, difficulty=difficulty)
-    db.add(new_prompt)
+    """Add a new mission and return the updated table."""
+    new_mission = Mission(text=text, category=category, difficulty=difficulty)
+    db.add(new_mission)
     await db.commit()
 
-    result = await db.execute(select(Prompt).order_by(Prompt.created_at.desc()))
-    prompts = result.scalars().all()
+    result = await db.execute(select(Mission).order_by(Mission.created_at.desc()))
+    missions = result.scalars().all()
 
     return templates.TemplateResponse(
-        request=request, name="partials/prompt_table.html", context={"prompts": prompts}
+        request=request,
+        name="partials/mission_table.html",
+        context={"missions": missions},
     )
 
 
-@router.patch("/prompt/{prompt_id}/status", response_class=HTMLResponse)
+@router.patch("/mission/{mission_id}/status", response_class=HTMLResponse)
 async def update_status(
     request: Request,
-    prompt_id: str,
+    mission_id: str,
     status: Annotated[str, Form()],
     db: AsyncSession = Depends(get_db),
 ) -> HTMLResponse:
-    """Update a prompt's status inline."""
-    prompt = await db.get(Prompt, prompt_id)
-    if prompt:
-        prompt.status = status
+    """Update a mission's status inline."""
+    mission = await db.get(Mission, mission_id)
+    if mission:
+        mission.status = status
         await db.commit()
 
     return templates.TemplateResponse(
-        request=request, name="partials/prompt_row.html", context={"prompt": prompt}
+        request=request, name="partials/mission_row.html", context={"mission": mission}
     )
 
 
-@router.delete("/prompt/{prompt_id}", response_class=HTMLResponse)
-async def delete_prompt(
-    prompt_id: str,
+@router.delete("/mission/{mission_id}", response_class=HTMLResponse)
+async def delete_mission(
+    mission_id: str,
     db: AsyncSession = Depends(get_db),
 ) -> HTMLResponse:
-    """Delete a prompt."""
-    prompt = await db.get(Prompt, prompt_id)
-    if prompt:
-        await db.delete(prompt)
+    """Delete a mission."""
+    mission = await db.get(Mission, mission_id)
+    if mission:
+        await db.delete(mission)
         await db.commit()
 
     return HTMLResponse(content="")
