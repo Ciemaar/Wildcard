@@ -1,0 +1,8 @@
+{
+  "typeCheckingMode": "standard",
+  "reportMissingTypeStubs": false,
+  "reportUnknownVariableType": false,
+  "reportUnknownMemberType": false,
+  "reportAttributeAccessIssue": false,
+  "reportArgumentType": false
+}

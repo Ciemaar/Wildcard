@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Batch PDF</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 0.25in;
+        }
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        /* Page break after every 9 cards (a 3x3 grid) */
+        .page {
+            page-break-after: always;
+            /* Container for the 3x3 grid */
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: flex-start;
+            width: 8in; /* 8.5in - 0.25in*2 margin = 8in */
+            height: 10.5in; /* 11in - 0.25in*2 margin = 10.5in */
+            margin: 0 auto;
+        }
+        .page:last-child {
+            page-break-after: avoid;
+        }
+        
+        /* Business Card Size: 3.5" x 2" 
+           However, to add crop marks, we give each card cell a border 
+           and padding, or we just draw the box directly and use WeasyPrint's
+           crop marks if we want, but doing it in CSS is more reliable visually.
+        */
+        .card-container {
+            width: 3.5in;
+            height: 2in;
+            box-sizing: border-box;
+            /* Faint cut lines */
+            border: 0.5px dashed #ccc;
+            position: relative;
+            /* Padding inside the card to keep text away from edges */
+            padding: 0.2in;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+        }
+
+        .brand-header {
+            font-size: 8pt;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: bold;
+        }
+
+        .mission-text {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #111;
+            text-align: center;
+            /* If mission is long, it might wrap. This prevents it from overflowing */
+            max-height: 1.2in;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .card-footer {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            font-size: 8pt;
+            color: #666;
+        }
+
+        .mission-id {
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    {% for page_cards in cards | batch(9) %}
+    <div class="page">
+        {% for card in page_cards %}
+        <div class="card-container">
+            <div class="brand-header">{{ settings.brand_name }}</div>
+            <div class="mission-text">{{ card.text }}</div>
+            <div class="card-footer">
+                <div class="mission-id">#{{ card.id[-4:] }}</div>
+                <div>{{ settings.hashtag }}</div>
+            </div>
+        </div>
+        {% endfor %}
+        
+        {# Fill remaining empty slots on the page if not a multiple of 9 #}
+        {% if page_cards | length < 9 %}
+            {% set empty_count = 9 - (page_cards | length) %}
+            {% for _ in range(empty_count) %}
+            <div class="card-container">
+                <!-- Blank card with just cut lines -->
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    {% endfor %}
+</body>
+</html>

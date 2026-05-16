@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Print Studio - Wildcard Management System{% endblock %}
+
+{% block content %}
+<div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+        <h1 class="text-base font-semibold leading-6 text-gray-900">Print Studio</h1>
+        <p class="mt-2 text-sm text-gray-700">Select APPROVED missions to generate a new printable batch.</p>
+    </div>
+</div>
+
+<div class="mt-8 flex gap-8">
+    <!-- Left Column: Selection Form -->
+    <div class="flex-1">
+        <form hx-post="/print-studio/batch" hx-target="#batch-result" class="space-y-6">
+            
+            <div id="batch-result"></div>
+
+            <div>
+                <label for="batch_name" class="block text-sm font-medium leading-6 text-gray-900">Batch Name</label>
+                <div class="mt-2">
+                    <input type="text" name="batch_name" id="batch_name" required placeholder="e.g., Launch Deck v1" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6">
+                </div>
+            </div>
+
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                <div class="flex">
+                    <div class="ml-3">
+                        <p class="text-sm text-blue-700">
+                            Cards are rendered 9 to a page (business card size). For best results, select missions in multiples of 9.
+                            <br>
+                            <span id="selection-count" class="font-bold">0</span> missions currently selected.
+                        </p>
+                        <p id="selection-warning" class="text-sm text-amber-600 font-bold hidden mt-2">
+                            Warning: The number of selected missions is not a multiple of 9. Blank cards will be rendered to fill the page.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 flow-root">
+                <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg bg-white">
+                            <table class="min-w-full divide-y divide-gray-300">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="relative px-7 sm:w-12 sm:px-6">
+                                            <input type="checkbox" id="select-all" class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-600">
+                                        </th>
+                                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Mission Text</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Category</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    {% for mission in missions %}
+                                    <tr>
+                                        <td class="relative px-7 sm:w-12 sm:px-6">
+                                            <input type="checkbox" name="mission_ids" value="{{ mission.id }}" class="mission-checkbox absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-600">
+                                        </td>
+                                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">{{ mission.text }}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ mission.category }}</td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="3" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                                            No APPROVED missions found. Go to the dashboard to approve some ideas.
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 flex items-center justify-end gap-x-6">
+                <button type="submit" class="rounded-md bg-brand-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600">Generate Batch</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Right Column: Visual Preview -->
+    <div class="hidden lg:block w-80">
+        <h3 class="text-sm font-medium leading-6 text-gray-900 mb-4">Card Preview</h3>
+        <div class="bg-white border-2 border-gray-300 border-dashed rounded-lg p-6 flex flex-col justify-between items-center h-48 aspect-[3.5/2] shadow-sm mx-auto">
+            <div class="text-xs text-gray-400 font-semibold tracking-wider uppercase">{{ settings.brand_name }}</div>
+            <div class="text-center font-bold text-gray-900 line-clamp-3">
+                <span class="italic block mt-1 text-xs text-gray-400">Your mission text will appear here</span>
+            </div>
+            <div class="w-full flex justify-between items-end text-xs text-gray-400">
+                <div class="font-mono">#ID</div>
+                <div>{{ settings.hashtag }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const checkboxes = document.querySelectorAll('.mission-checkbox');
+        const selectAll = document.getElementById('select-all');
+        const countSpan = document.getElementById('selection-count');
+        const warningP = document.getElementById('selection-warning');
+
+        function updateCount() {
+            const count = document.querySelectorAll('.mission-checkbox:checked').length;
+            countSpan.textContent = count;
+            
+            if (count > 0 && count % 9 !== 0) {
+                warningP.classList.remove('hidden');
+            } else {
+                warningP.classList.add('hidden');
+            }
+        }
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', updateCount);
+        });
+
+        if (selectAll) {
+            selectAll.addEventListener('change', (e) => {
+                checkboxes.forEach(cb => {
+                    cb.checked = e.target.checked;
+                });
+                updateCount();
+            });
+        }
+    });
+</script>
+{% endblock %}
