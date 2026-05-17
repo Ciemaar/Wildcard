@@ -36,6 +36,11 @@ dev = [
 [project.scripts]
 wms = "wms.main:app"
 
+[project.optional-dependencies]
+vercel = [
+    "vercel>=0.5.8",
+]
+
 [tool.ruff]
 target-version = 'py312'
 src = ['src', 'tests']
