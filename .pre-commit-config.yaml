@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: uv-audit
+        name: uv audit
+        entry: uv audit
+        language: system
+        pass_filenames: false
+        always_run: true
