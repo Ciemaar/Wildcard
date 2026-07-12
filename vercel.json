@@ -1,0 +1,13 @@
+{
+  "installCommand": "./vercel-build.sh && pip install -r requirements.txt",
+  "rewrites": [
+    {
+      "source": "/static/(.*)",
+      "destination": "/src/wms/static/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/api/index.py"
+    }
+  ]
+}
