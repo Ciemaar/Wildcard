@@ -18,9 +18,12 @@ jobs:
       uses: astral-sh/setup-uv@v5
       with:
         enable-cache: true
+        version: "latest"
 
     - name: Set up Python
-      run: uv python install 3.13
+      uses: actions/setup-python@v5
+      with:
+        python-version-file: ".python-version"
 
     - name: Run uv audit
       run: uv audit
