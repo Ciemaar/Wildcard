@@ -26,6 +26,7 @@ dependencies = [
 dev = [
     "hypothesis>=6.152.1",
     "mdformat>=1.0.0",
+    "pre-commit>=4.6.0",
     "pyright>=1.1.408",
     "pytest>=9.0.3",
     "ruff>=0.15.11",
@@ -35,7 +36,7 @@ wms = "wms.main:app"
 
 [project.optional-dependencies]
 vercel = [
-    "vercel>=0.5.8",
+
     "asyncpg>=0.31.0",
     "psycopg>=3.3.4",
     "psycopg2-binary>=2.9.12",

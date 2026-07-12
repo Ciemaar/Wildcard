@@ -3,7 +3,7 @@ repos:
     hooks:
       - id: uv-audit
         name: uv audit
-        entry: uv audit
+        entry: uv run uv audit
         language: system
         pass_filenames: false
         always_run: true
