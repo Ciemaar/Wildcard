@@ -19,6 +19,6 @@ Manually bundle the application into `.vercel/output/functions` and `.vercel/out
 We proceed with **Option 1**. It balances the constraint of not committing a `requirements.txt` file while remaining firmly inside the happy path of Vercel's deployment ecosystem.
 
 Additional actions taken:
-- Added `vercel` CLI as an optional dependency via `uv add --optional vercel vercel` to enable `uv run vercel ...` commands.
+- Added Postgres dependencies to `[project.optional-dependencies]` under `vercel`.
 - Included `vercel.json` to properly map routes and API entry points.
 - Adjusted `session.py` to seamlessly upgrade standard `postgres://` URLs to `postgresql+asyncpg://` to interface with Vercel Postgres natively while retaining SQLite for local dev.
