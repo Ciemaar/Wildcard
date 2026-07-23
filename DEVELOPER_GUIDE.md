@@ -61,10 +61,11 @@ The application is structured into domain-specific Fast API routers mounted in `
 This project is configured to be deployed on Vercel using the `@vercel/python` builder. Vercel is a cloud platform for static and serverless deployments.
 
 ### Local Tooling & Deployment
-1. Install the Vercel CLI via npm: `npm i -g vercel`
-2. Link the project: `vercel link`
-3. Pull the environment variables: `vercel env pull .env`
-4. Deploy the project: `vercel --prod`
+1. Ensure the `vercel` optional dependency group is installed in your python environment: `uv sync --extra vercel`
+2. Install the Vercel CLI via npm: `npm i -g vercel`
+3. Link the project: `vercel link`
+4. Pull the environment variables: `vercel env pull .env`
+5. Deploy the project: `vercel --prod`
 
 ### Tool Evaluation Required
 Whenever a new third-party integration or deployment strategy like Vercel is proposed, developers must first evaluate the tooling. If a major platform constraint or new dependency system is introduced (e.g., dynamically building `requirements.txt` via `vercel-build.sh` because Vercel requires it over `pyproject.toml`), a tool evaluation must be documented in `docs/tooling_evaluation.md`.

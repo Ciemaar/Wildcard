@@ -1,24 +1,48 @@
 # Tooling Evaluation: Vercel
 
 ## Problem Description
-The project needs to be deployed to Vercel, but Vercel's standard Python builder natively expects dependencies to be defined in a `requirements.txt` or `Pipfile`. However, our project strictly uses `uv` and `pyproject.toml` for dependency management. Furthermore, our project utilizes FastAPI, whereas Vercel expects a specific entrypoint format (`api/index.py`) and has specific CDN requirements for static files. Lastly, Vercel deployments are ephemeral, and local development utilizes an ephemeral SQLite database, necessitating an external persistent store for production.
+The project needs to be deployed to a web hosting provider. Currently, the project utilizes FastAPI with a strict `uv` and `pyproject.toml` dependency management approach. Additionally, local development utilizes an ephemeral SQLite database, necessitating an external persistent store for production. We need to evaluate hosting providers that can support this architecture efficiently.
 
 ## Options Evaluated
-### Option 1: Native Vercel Python Builder with Vercel configuration
-Use the standard `@vercel/python` builder but inject a build step.
-*   **Pros:** Native integration, easy to configure via `vercel.json` without fighting the platform.
-*   **Cons:** Vercel builder *requires* `requirements.txt`.
-*   **Mitigation:** Create a custom bash script (`vercel-build.sh`) that Vercel runs during the `Install Command` phase. This script dynamically installs `uv` and runs `uv pip compile pyproject.toml -o requirements.txt`, satisfying the python builder without checking `requirements.txt` into git.
 
-### Option 2: Build Output API (v3)
-Manually bundle the application into `.vercel/output/functions` and `.vercel/output/static`.
-*   **Pros:** Total control over the python virtual environment. Can use `uv` directly to bundle dependencies.
-*   **Cons:** High maintenance burden. Requires a complex custom build script and defeats the purpose of Vercel's zero-config paradigm.
+### Option 1: Vercel
+Vercel is a cloud platform for static sites and Serverless Functions.
+*   **Pros:**
+    *   Zero-configuration deployments for many frameworks.
+    *   Built-in global Edge Network (CDN) for static assets.
+    *   Provides managed PostgreSQL databases (Vercel Postgres) out of the box, fulfilling our need for a production data store.
+    *   Excellent developer experience with automatic preview deployments per pull request.
+*   **Cons:**
+    *   Vercel's standard Python builder natively expects dependencies to be defined in a `requirements.txt` or `Pipfile`, which conflicts with our `uv`-centric approach.
+    *   Deployments are ephemeral serverless functions, meaning background tasks or persistent in-memory states are not supported natively without external queues.
+    *   Expects a specific entrypoint format (`api/index.py`) for Python serverless functions.
+*   **Mitigation:** Create a custom bash script (`vercel-build.sh`) that dynamically installs `uv` and runs `uv pip compile pyproject.toml -o requirements.txt`, satisfying the python builder without checking `requirements.txt` into git. We can adapt our application entrypoint to `api/index.py` easily.
+
+### Option 2: Heroku / Render (PaaS)
+Traditional Platform-as-a-Service providers.
+*   **Pros:**
+    *   Supports persistent running processes (web dynos) without the cold starts or ephemeral limits of serverless functions.
+    *   More flexible dependency management without strict `requirements.txt` requirements if using Dockerfile deployments.
+*   **Cons:**
+    *   More configuration required compared to Vercel's seamless GitHub integration.
+    *   Can become expensive quickly as traffic scales, unlike Vercel's generous free/hobby tiers.
+    *   CDN setup for static files is often a separate integration step.
+
+### Option 3: AWS / GCP / Azure (IaaS)
+Infrastructure-as-a-Service providers using Docker containers (e.g., AWS ECS, GCP Cloud Run).
+*   **Pros:**
+    *   Maximum flexibility and control over the environment.
+    *   Can run anything that fits in a Docker container.
+*   **Cons:**
+    *   Significant operational overhead to manage infrastructure, load balancers, and CI/CD pipelines.
+    *   Overkill for a relatively straightforward FastAPI web application.
 
 ## Recommendation & Decision
-We proceed with **Option 1**. It balances the constraint of not committing a `requirements.txt` file while remaining firmly inside the happy path of Vercel's deployment ecosystem.
+We proceed with **Option 1: Vercel**. The developer experience, automatic preview environments, and integrated managed PostgreSQL make it the most attractive option. The primary drawback—Vercel's `requirements.txt` expectation—can be cleanly mitigated with a custom build script that integrates our `uv` tooling seamlessly.
 
-Additional actions taken:
-- Added Postgres dependencies to `[project.optional-dependencies]` under `vercel`.
-- Included `vercel.json` to properly map routes and API entry points.
-- Adjusted `session.py` to seamlessly upgrade standard `postgres://` URLs to `postgresql+asyncpg://` to interface with Vercel Postgres natively while retaining SQLite for local dev.
+### Implementation Details for Vercel Integration
+To adopt Vercel while maintaining our project standards, we will:
+1.  **Use the Native Vercel Python Builder:** We will use the standard `@vercel/python` builder but inject a build step (`vercel-build.sh`) during the `Install Command` phase. This script will dynamically generate `requirements.txt` from our `pyproject.toml` using `uv`.
+2.  **Optional Dependencies:** We will add Vercel-specific Postgres dependencies (`asyncpg`, `psycopg`) to `[project.optional-dependencies]` under the `vercel` key in `pyproject.toml` to keep the core local installation clean.
+3.  **Configuration:** We will include `vercel.json` to properly map static routes to the CDN and API requests to the `api/index.py` entry point.
+4.  **Database Routing:** We will adjust `session.py` to seamlessly upgrade standard `postgres://` URLs (provided by Vercel Postgres) to `postgresql+asyncpg://` to interface with the database natively while retaining SQLite for local development.
