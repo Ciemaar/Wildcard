@@ -21,9 +21,10 @@ elif async_database_url.startswith("sqlite:///"):
         "sqlite:///", "sqlite+aiosqlite:///", 1
     )
 
-if async_database_url.startswith(
-    "sqlite+aiosqlite:///"
-) and async_database_url != "sqlite+aiosqlite:///:memory:":
+if (
+    async_database_url.startswith("sqlite+aiosqlite:///")
+    and async_database_url != "sqlite+aiosqlite:///:memory:"
+):
     # Vercel's serverless environment has a read-only filesystem (except /tmp)
     # If the user forgot to set the DATABASE_URL environment variable to a
     # Postgres instance, it will fall back to the default file-based SQLite URL
