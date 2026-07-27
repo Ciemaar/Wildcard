@@ -3,12 +3,9 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
-from wms.config import settings
-from wms.database.session import async_database_url
-
 
 def test_pydantic_ignores_vercel_extra_env_vars():
-    """Verify pydantic ignores extra variables like vercel_oidc_token"""
+    """Verify pydantic ignores extra variables like vercel_oidc_token."""
     with patch.dict(os.environ, {"VERCEL_OIDC_TOKEN": "some_token"}):
         from wms.config import Settings
 
@@ -18,9 +15,7 @@ def test_pydantic_ignores_vercel_extra_env_vars():
 
 
 def test_session_postgres_url_rewrite():
-    """Test that session.py correctly rewrites postgres:// to postgresql+asyncpg://"""
-    from wms.database import session
-
+    """Test that session.py correctly rewrites postgres:// to postgresql+asyncpg://."""
     # We can't easily re-evaluate the module level variable without reloading,
     # but we can test the logic directly
     test_urls = [
@@ -47,7 +42,7 @@ def test_session_postgres_url_rewrite():
 
 
 def test_api_index_exports_app():
-    """Test that api/index.py exports the FastAPI app correctly for Vercel"""
+    """Test that api/index.py exports the FastAPI app correctly for Vercel."""
     # Temporarily add the root dir to sys.path so we can import `api.index`
     root_dir = str(Path(__file__).resolve().parent.parent.parent)
     sys.path.insert(0, root_dir)
