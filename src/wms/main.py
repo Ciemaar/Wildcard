@@ -8,8 +8,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from wms.config import settings
+from wms.database.models import Base
 from wms.database.seed import seed_data
-from wms.database.session import AsyncSessionLocal
+from wms.database.session import AsyncSessionLocal, engine
 from wms.routers import dashboard, print_studio
 
 logger = logging.getLogger(__name__)
@@ -18,6 +19,14 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Handle application startup and shutdown events."""
+    # Note: Alembic is the canonical migration strategy.
+    # However, if Vercel defaults to an ephemeral in-memory SQLite DB
+    # due to a missing Postgres connection string, we must create the tables dynamically
+    # or the application will crash during the `seed_data` call.
+    if str(engine.url) == "sqlite+aiosqlite:///:memory:":
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+
     async with AsyncSessionLocal() as session:
         await seed_data(session)
     yield

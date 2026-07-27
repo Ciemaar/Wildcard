@@ -7,3 +7,6 @@ chmod +x install_uv.sh
 ./install_uv.sh
 export PATH="$HOME/.local/bin:$PATH"
 uv pip compile pyproject.toml --extra vercel -o requirements.txt
+
+# Run migrations
+PYTHONPATH=src uv run alembic upgrade head
