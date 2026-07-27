@@ -55,6 +55,7 @@ def test_api_index_exports_app():
 
         # Verify it's actually the FastAPI app
         from fastapi import FastAPI
+
         assert isinstance(index.app, FastAPI)
     finally:
         sys.path.remove(root_dir)
