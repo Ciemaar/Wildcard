@@ -12,4 +12,4 @@ repos:
         entry: uv run mdformat
         language: system
         types: [markdown]
-        exclude: ^(\.venv|\.tox|reports|plans|prompts|build|dist)/
+        exclude: \.(venv|tox)/|reports/|plans/|prompts/|build/|dist/

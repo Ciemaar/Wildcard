@@ -31,7 +31,7 @@ jobs:
       - name: Run Ruff Formatter
         run: uv run ruff format --check
       - name: Run Markdown Formatter
-        run: uv run mdformat --check .
+        run: uv run mdformat --check src tests docs *.md
       - name: Run Type Checker
         run: uv run pyright
 
