@@ -71,12 +71,14 @@ The application is structured into domain-specific Fast API routers mounted in `
 
 This project is configured to be deployed on Vercel using the `@vercel/python` builder. Vercel is a cloud platform for static and serverless deployments.
 
+**Important Note on Databases:** Vercel Serverless Functions have a read-only filesystem. If you do not provision an external database, the application will default to an in-memory SQLite database (`sqlite+aiosqlite:///:memory:`) in Vercel to prevent a startup crash, meaning your data will not persist. **You must provision a Vercel Postgres database via the Vercel Dashboard and link it to your project to populate the `DATABASE_URL` environment variable for production data persistence.**
+
 ### Local Tooling & Deployment
 
 1. Ensure the `vercel` optional dependency group is installed in your python environment: `uv sync --extra vercel`
 1. Install the Vercel CLI via npm: `npm i -g vercel`
 1. Link the project: `vercel link`
-1. Pull the environment variables: `vercel env pull .env`
+1. Pull the environment variables (this should include the `DATABASE_URL` from Vercel Postgres): `vercel env pull .env`
 1. Deploy the project: `vercel --prod`
 
 ### Tool Evaluation Required
