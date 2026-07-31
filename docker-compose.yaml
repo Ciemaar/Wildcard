@@ -11,6 +11,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  # Adminer is a lightweight web interface for the database.
   adminer:
     image: adminer
     restart: always

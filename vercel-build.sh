@@ -9,4 +9,4 @@ export PATH="$HOME/.local/bin:$PATH"
 uv pip compile pyproject.toml --extra vercel -o requirements.txt
 
 # Run migrations
-PYTHONPATH=src uv run alembic upgrade head
+PYTHONPATH=src uv run --extra vercel alembic upgrade head

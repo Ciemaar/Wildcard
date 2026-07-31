@@ -14,6 +14,10 @@
    ```bash
    uv sync
    ```
+1. **Pre-commit Hooks:** Install the pre-commit hooks to automatically format and lint code:
+   ```bash
+   uv run pre-commit install
+   ```
 1. **Database Setup:**
    The database uses SQLite and migrations are handled by Alembic.
    Apply the migrations before starting the app:
