@@ -209,3 +209,4 @@ __marimo__/
 # Database artifacts
 *.db
 *.sqlite
+requirements.txt

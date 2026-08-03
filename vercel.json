@@ -1,0 +1,13 @@
+{
+  "buildCommand": "./vercel-build.sh",
+  "rewrites": [
+    {
+      "source": "/static/(.*)",
+      "destination": "/src/wms/static/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/api/index.py"
+    }
+  ]
+}

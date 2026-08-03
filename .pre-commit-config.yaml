@@ -7,3 +7,21 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+      - id: ruff-check
+        name: ruff check
+        entry: uv run ruff check --fix
+        language: system
+        types: [python]
+        require_serial: true
+      - id: ruff-format
+        name: ruff format
+        entry: uv run ruff format
+        language: system
+        types: [python]
+        require_serial: true
+      - id: mdformat
+        name: mdformat
+        entry: uv run mdformat
+        language: system
+        types: [markdown]
+        exclude: \.(venv|tox)/|reports/|plans/|prompts/|build/|dist/
