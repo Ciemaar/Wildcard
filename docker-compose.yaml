@@ -4,7 +4,7 @@ services:
     environment:
       # Placeholder credentials for local development. Not for production use.
       POSTGRES_USER: wildcard_user
-      POSTGRES_PASSWORD: wildcard_password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-wildcard_password}
       POSTGRES_DB: wildcard_db
     ports:
       - "5432:5432"
