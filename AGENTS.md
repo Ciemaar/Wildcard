@@ -7,6 +7,7 @@
 - Use `pathlib.Path`.
 - Use top-of-file imports.
 - Rely on server-side rendering (FastAPI + Jinja2) and HTMX.
+- When working on an existing, previous branch (e.g., rebasing or merging), features must not be removed if they've been added to the main branch in the intermediate interval. All branches being merged in, as well as their matching PRs, must be referenced in the commit comments and any new PRs.
 
 ## Never Do
 
