@@ -9,7 +9,7 @@
 
 ## Local Setup
 
-1. **Python Environment:** Ensure Python 3.12+ is installed.
+1. **Python Environment:** Ensure Python 3.14+ is installed.
 1. **Package Management:** We strictly use `uv` for package management. To sync dependencies, run:
    ```bash
    uv sync

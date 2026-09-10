@@ -6,7 +6,7 @@ This guide covers the necessary steps to set up, build, run, and maintain the Wi
 
 Ensure you have the following installed on your machine:
 
-- Python 3.12+
+- Python 3.14+
 - `uv` (for package management)
 
 ## 2. Virtual Environment Setup & Installation
