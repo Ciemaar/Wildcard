@@ -24,7 +24,7 @@
 
 ## Code Standards
 
-- **Python Standards**: Use modern Python (3.12+) with built-in type hints (e.g., `list[str]`, `str | None`), strictly enforce top-of-file imports, and avoid `typing.Any`.
+- **Python Standards**: Use modern Python (3.14+) with built-in type hints (e.g., `list[str]`, `str | None`), strictly enforce top-of-file imports, and avoid `typing.Any`.
 - **Standard Libraries**: Always use `pathlib.Path` instead of `os.path`, the `logging` module instead of `print()`, and `yaml.safe_load` for serialization instead of `pickle`.
 - **Code Logic Constraints**: Never use the `x or y` shortcut syntax for non-boolean results. Always use explicit ternary operations like `x if x is not None else y`.
 - **Linting & Formatting**: Use `ruff` for Python code, `mdformat` for Markdown, and enforce Ruff's `pydocstyle (D)` ruleset for docstrings.
