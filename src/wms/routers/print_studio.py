@@ -1,15 +1,15 @@
 """Print Studio router."""
 
-from typing import Annotated, List
+lazy from typing import Annotated, List
 
-from fastapi import APIRouter, Depends, Form, Request
-from fastapi.responses import HTMLResponse, Response
-from fastapi.templating import Jinja2Templates
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+lazy from fastapi import APIRouter, Depends, Form, Request
+lazy from fastapi.responses import HTMLResponse, Response
+lazy from fastapi.templating import Jinja2Templates
+lazy from sqlalchemy import select
+lazy from sqlalchemy.ext.asyncio import AsyncSession
 
-from wms.database.models import Batch, BatchMission, Mission
-from wms.database.session import get_db
+lazy from wms.database.models import Batch, BatchMission, Mission
+lazy from wms.database.session import get_db
 
 router = APIRouter(tags=["print-studio"])
 templates = Jinja2Templates(directory="src/wms/templates")
@@ -30,6 +30,7 @@ async def print_studio(
     result = await db.execute(query)
     missions = result.scalars().all()
 
+    # eager: inner import
     from wms.config import settings
 
     return templates.TemplateResponse(
@@ -72,6 +73,7 @@ async def create_batch(
 
     # Provide a link to download the PDF for this batch,
     # or simply reload with success message
+    # eager: inner import
     from wms.config import settings
 
     return templates.TemplateResponse(
@@ -87,9 +89,12 @@ async def generate_pdf(
     db: AsyncSession = Depends(get_db),
 ) -> Response:
     """Generate a PDF for a specific batch."""
+    # eager: inner import
     from sqlalchemy.orm import selectinload
+    # eager: inner import
     from weasyprint import HTML
 
+    # eager: inner import
     from wms.config import settings
 
     # Fetch batch and its missions

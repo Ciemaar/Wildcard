@@ -1,9 +1,9 @@
-import datetime
-import uuid
-from typing import List
+lazy import datetime
+lazy import uuid
+lazy from typing import List
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+lazy from sqlalchemy import DateTime, ForeignKey, Integer, String
+lazy from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):

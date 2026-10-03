@@ -1,6 +1,6 @@
-from fastapi.testclient import TestClient
+lazy from fastapi.testclient import TestClient
 
-from wms.main import app
+lazy from wms.main import app
 
 client = TestClient(app)
 

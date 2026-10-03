@@ -3,7 +3,7 @@ name = "app"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.15"
 dependencies = [
     "aiosqlite>=0.22.1",
     "alembic>=1.18.4",
@@ -22,6 +22,16 @@ dependencies = [
     "weasyprint>=70.0",
 ]
 
+[project.scripts]
+wms = "wms.main:app"
+
+[project.optional-dependencies]
+vercel = [
+    "asyncpg>=0.31.0",
+    "psycopg>=3.3.4",
+    "psycopg2-binary>=2.9.12",
+]
+
 [dependency-groups]
 dev = [
     "hypothesis>=6.152.1",
@@ -31,26 +41,49 @@ dev = [
     "pytest>=9.0.3",
     "ruff>=0.15.11",
 ]
-[project.scripts]
-wms = "wms.main:app"
-
-[project.optional-dependencies]
-vercel = [
-
-    "asyncpg>=0.31.0",
-    "psycopg>=3.3.4",
-    "psycopg2-binary>=2.9.12",
-]
 
 [tool.ruff]
-target-version = 'py314'
-src = ['src', 'tests']
+target-version = "py315"
+src = [
+    "src",
+    "tests",
+]
+exclude = [
+    "src/wms/main.py",
+    "src/wms/config.py",
+    "src/wms/database/models.py",
+    "src/wms/database/seed.py",
+    "src/wms/database/session.py",
+    "src/wms/routers/dashboard.py",
+    "src/wms/routers/print_studio.py",
+    "tests/conftest.py",
+    "tests/wms/test_dashboard.py",
+    "tests/wms/test_integration.py",
+    "tests/wms/test_main.py",
+    "tests/wms/test_pdf.py",
+    "tests/wms/test_print_studio.py",
+    "tests/wms/test_unit.py",
+    "tests/wms/test_vercel.py",
+]
+
 [tool.ruff.lint]
-select = ['E', 'F', 'I', 'D']
-ignore = ['D100', 'D104']
+select = [
+    "E",
+    "F",
+    "I",
+    "D",
+]
+ignore = [
+    "D100",
+    "D104",
+]
+
 [tool.ruff.lint.pydocstyle]
-convention = 'google'
+convention = "google"
 
 [tool.pyright]
-typeCheckingMode = 'strict'
-include = ['src', 'tests']
+typeCheckingMode = "strict"
+include = [
+    "src",
+    "tests",
+]

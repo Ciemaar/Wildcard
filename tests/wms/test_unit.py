@@ -1,4 +1,4 @@
-from wms.database.models import Batch, Mission, generate_uuid
+lazy from wms.database.models import Batch, Mission, generate_uuid
 
 
 def test_generate_uuid():
