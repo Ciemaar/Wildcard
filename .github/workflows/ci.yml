@@ -23,10 +23,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version-file: ".python-version"
-          allow-prereleases: true
+          python-version: "3.15.0-alpha.6"
       - name: Install dependencies
-        run: uv sync --all-extras --dev
+        run: |
+          uv pip install "cython>=3.0.11" --python 3.15.0-alpha.6
+          uv pip install "greenlet>=3.1.1" --python 3.15.0-alpha.6 --no-binary greenlet
+          uv sync --all-extras --dev
       - name: Run Ruff Linter
         run: uv run ruff check
       - name: Run Ruff Formatter
@@ -41,7 +43,7 @@ jobs:
     needs: lint
     strategy:
       matrix:
-        python-version: ["3.15"]
+        python-version: ["3.15.0-alpha.6"]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -53,17 +55,19 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          allow-prereleases: true
       - name: Install dependencies
-        run: uv sync --all-extras --dev
+        run: |
+          uv pip install "cython>=3.0.11" --python 3.15.0-alpha.6
+          uv pip install "greenlet>=3.1.1" --python 3.15.0-alpha.6 --no-binary greenlet
+          uv sync --all-extras --dev
       - name: Allow tox to build packages from source
-        if: matrix.python-version == '3.15'
+        if: matrix.python-version == '3.15.0-alpha.6'
         run: |
           echo "PIP_NO_BINARY=greenlet,hypothesis" >> $GITHUB_ENV
           echo "HYPOTHESIS_NO_EXTENSION=1" >> $GITHUB_ENV
       - name: Run Tests
-        continue-on-error: ${{ matrix.python-version == '3.15' }}
+        continue-on-error: true
         run: |
-          VERSION="${{ matrix.python-version }}"
+          VERSION="3.15"
           TOX_ENV="py${VERSION//./}"
           uv run tox -e $TOX_ENV
