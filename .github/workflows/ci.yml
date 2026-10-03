@@ -23,7 +23,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.15.0-alpha.6"
+          python-version: "3.15"
           allow-prereleases: true
       - name: Allow tox to build packages from source
         run: |
@@ -32,8 +32,8 @@ jobs:
           echo "HYPOTHESIS_NO_EXTENSION=1" >> $GITHUB_ENV
       - name: Install dependencies
         run: |
-          uv pip install "cython>=3.0.11" --system --python 3.15.0-alpha.6
-          uv pip install "greenlet>=3.1.1" --system --python 3.15.0-alpha.6 --no-binary greenlet
+          uv pip install "cython>=3.0.11" --system --python 3.15
+          uv pip install "greenlet>=3.1.1" --system --python 3.15 --no-binary greenlet
           uv sync --all-extras --dev
       - name: Run Ruff Linter
         run: uv run ruff check
@@ -49,7 +49,7 @@ jobs:
     needs: lint
     strategy:
       matrix:
-        python-version: ["3.15.0-alpha.6"]
+        python-version: ["3.15"]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -63,15 +63,15 @@ jobs:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
       - name: Allow tox to build packages from source
-        if: matrix.python-version == '3.15.0-alpha.6'
+        if: matrix.python-version == '3.15'
         run: |
           echo "PIP_NO_BINARY=greenlet,hypothesis,pyyaml" >> $GITHUB_ENV
           echo "PYYAML_FORCE_CYTHON=0" >> $GITHUB_ENV
           echo "HYPOTHESIS_NO_EXTENSION=1" >> $GITHUB_ENV
       - name: Install dependencies
         run: |
-          uv pip install "cython>=3.0.11" --system --python 3.15.0-alpha.6
-          uv pip install "greenlet>=3.1.1" --system --python 3.15.0-alpha.6 --no-binary greenlet
+          uv pip install "cython>=3.0.11" --system --python 3.15
+          uv pip install "greenlet>=3.1.1" --system --python 3.15 --no-binary greenlet
           uv sync --all-extras --dev
       - name: Run Tests
         continue-on-error: true
