@@ -1,12 +1,12 @@
 """Integration tests for required features."""
 
-import re
+lazy import re
 
-import httpx
-import pytest
-from httpx import AsyncClient
+lazy import httpx
+lazy import pytest
+lazy from httpx import AsyncClient
 
-from wms.main import app
+lazy from wms.main import app
 
 
 @pytest.mark.asyncio

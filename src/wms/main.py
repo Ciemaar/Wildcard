@@ -1,17 +1,17 @@
-import logging
-from contextlib import asynccontextmanager
-from typing import AsyncGenerator
+lazy import logging
+lazy from contextlib import asynccontextmanager
+lazy from typing import AsyncGenerator
 
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+lazy from fastapi import FastAPI, Request
+lazy from fastapi.responses import HTMLResponse
+lazy from fastapi.staticfiles import StaticFiles
+lazy from fastapi.templating import Jinja2Templates
 
-from wms.config import settings
-from wms.database.models import Base
-from wms.database.seed import seed_data
-from wms.database.session import AsyncSessionLocal, engine
-from wms.routers import dashboard, print_studio
+lazy from wms.config import settings
+lazy from wms.database.models import Base
+lazy from wms.database.seed import seed_data
+lazy from wms.database.session import AsyncSessionLocal, engine
+lazy from wms.routers import dashboard, print_studio
 
 logger = logging.getLogger(__name__)
 

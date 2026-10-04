@@ -1,9 +1,9 @@
-import logging
-from typing import AsyncGenerator
+lazy import logging
+lazy from typing import AsyncGenerator
 
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+lazy from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-from wms.config import settings
+lazy from wms.config import settings
 
 logger = logging.getLogger(__name__)
 

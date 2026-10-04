@@ -1,13 +1,13 @@
-from typing import AsyncGenerator
-from unittest.mock import patch
+lazy from typing import AsyncGenerator
+lazy from unittest.mock import patch
 
-import pytest_asyncio
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.pool import StaticPool
+lazy import pytest_asyncio
+lazy from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+lazy from sqlalchemy.pool import StaticPool
 
-from wms.database.models import Base
-from wms.database.session import get_db
-from wms.main import app
+lazy from wms.database.models import Base
+lazy from wms.database.session import get_db
+lazy from wms.main import app
 
 # Create an in-memory SQLite database for testing
 async_test_database_url = "sqlite+aiosqlite:///:memory:"

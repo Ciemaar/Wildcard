@@ -1,12 +1,13 @@
-import os
-import sys
-from pathlib import Path
-from unittest.mock import patch
+lazy import os
+lazy import sys
+lazy from pathlib import Path
+lazy from unittest.mock import patch
 
 
 def test_pydantic_ignores_vercel_extra_env_vars():
     """Verify pydantic ignores extra variables like vercel_oidc_token."""
     with patch.dict(os.environ, {"VERCEL_OIDC_TOKEN": "some_token"}):
+        # eager: inner import
         from wms.config import Settings
 
         # This will raise a ValidationError if extra="ignore" is not set
@@ -48,12 +49,14 @@ def test_api_index_exports_app():
     sys.path.insert(0, root_dir)
 
     try:
+        # eager: try/except block
         import api.index as index
 
         assert hasattr(index, "app")
         assert index.__all__ == ["app"]
 
         # Verify it's actually the FastAPI app
+        # eager: inner import
         from fastapi import FastAPI
 
         assert isinstance(index.app, FastAPI)

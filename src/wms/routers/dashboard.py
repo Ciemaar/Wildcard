@@ -1,15 +1,15 @@
 """Idea Dashboard router."""
 
-from typing import Annotated
+lazy from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form, Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+lazy from fastapi import APIRouter, Depends, Form, Request
+lazy from fastapi.responses import HTMLResponse
+lazy from fastapi.templating import Jinja2Templates
+lazy from sqlalchemy import select
+lazy from sqlalchemy.ext.asyncio import AsyncSession
 
-from wms.database.models import Mission
-from wms.database.session import get_db
+lazy from wms.database.models import Mission
+lazy from wms.database.session import get_db
 
 router = APIRouter(tags=["dashboard"])
 templates = Jinja2Templates(directory="src/wms/templates")
@@ -43,6 +43,7 @@ async def dashboard(
             context={"missions": missions},
         )
 
+    # eager: inner import
     from wms.config import settings
 
     return templates.TemplateResponse(
