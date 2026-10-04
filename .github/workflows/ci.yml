@@ -23,7 +23,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.15.0rc2"
+          python-version: "3.15.0-alpha.6"
       - name: Allow tox to build packages from source
         run: |
           echo "PIP_NO_BINARY=greenlet,hypothesis,pyyaml" >> $GITHUB_ENV
@@ -48,7 +48,7 @@ jobs:
     needs: lint
     strategy:
       matrix:
-        python-version: ["3.15.0rc2"]
+        python-version: ["3.15.0-alpha.6"]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -61,7 +61,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Allow tox to build packages from source
-        if: matrix.python-version == '3.15.0rc2'
+        if: matrix.python-version == '3.15.0-alpha.6'
         run: |
           echo "PIP_NO_BINARY=greenlet,hypothesis,pyyaml" >> $GITHUB_ENV
           echo "PYYAML_FORCE_CYTHON=0" >> $GITHUB_ENV
